@@ -411,7 +411,7 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
         The translation of "{text}" from English to Fon is "
         {jsonResponse?.translation}"
         <br />
-        and the pronunciation is:
+        and the pronunciation in Fon is:
         <audio src={base64Audio} controls className="w-full mt-2" />
       </BotCard>,
     );
@@ -433,6 +433,18 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
       reply.update(
         <BotCard>
           <ul>
+            <Row>Generating Fon audio {spinner}</Row>
+          </ul>
+        </BotCard>,
+      );
+
+      const blob = await ttsFon(text);
+      const base64Audio = await blobToBase64(blob);
+
+      reply.update(
+        <BotCard>
+          <ul>
+            <Row>Generating Fon audio {checkIcon}</Row>
             <Row>Translating from Fon to English {spinner}</Row>
           </ul>
         </BotCard>,
@@ -454,6 +466,7 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
       reply.update(
         <BotCard>
           <ul>
+            <Row>Generating Fon audio {checkIcon}</Row>
             <Row>Translating from Fon to English {checkIcon}</Row>
             <Row>Generating additional information {spinner}</Row>
           </ul>
@@ -465,6 +478,7 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
       reply.update(
         <BotCard>
           <ul>
+            <Row>Generating Fon audio {checkIcon}</Row>
             <Row>Translating from Fon to English {checkIcon}</Row>
             <Row>Generating additional information {checkIcon}</Row>
             <Row>Generating additional image {spinner}</Row>
@@ -484,6 +498,7 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
       reply.update(
         <BotCard>
           <ul>
+            <Row>Generating Fon audio {checkIcon}</Row>
             <Row>Translating from Fon to English {checkIcon}</Row>
             <Row>Generating additional information {checkIcon}</Row>
             <Row>Generating additional image {checkIcon}</Row>
@@ -498,6 +513,10 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
           The translation of "{text}" from Fon to English is "
           {jsonResponse?.translation}"
           <br />
+          <div className="my-2">
+            The pronunciation of "{text}" in Fon is:
+            <audio src={base64Audio} controls className="w-full mt-2" />
+          </div>
           {additionalInfo}
           <br />
           <img src={imgUrl} alt="Generated image" />
