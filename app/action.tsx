@@ -510,16 +510,15 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
 
       reply.done(
         <BotCard>
-          The translation of "{text}" from Fon to English is "
-          {jsonResponse?.translation}"
-          <br />
-          <div className="my-2">
+          <div>
             The pronunciation of "{text}" in Fon is:
             <audio src={base64Audio} controls className="w-full mt-2" />
           </div>
-          {additionalInfo}
-          <br />
-          <img src={imgUrl} alt="Generated image" />
+          <div className="mt-1">
+            The translation to English is "{jsonResponse?.translation}"<br />
+            {additionalInfo}
+          </div>
+          <img src={imgUrl} alt="Generated image" className="mt-2" />
         </BotCard>,
       );
 
