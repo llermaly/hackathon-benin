@@ -10,15 +10,15 @@ import { Header } from '@/components/header';
 import { Providers } from '@/components/providers';
 
 const meta = {
-  title: 'Interactive Tourism Guide for Benin',
+  title: 'FongBot 🇧🇯',
   description:
     "This demo showcases an AI-powered assistant that is tailored to help tourists prepare for their journey to Benin, immersing them in Fon culture and facilitating communication. Built using advanced AI technology, this assistant is a specialist in the Fon culture and provides expert translations between English and Fon. It also creates visual content that enriches the user's understanding of Benin.",
 };
 export const metadata: Metadata = {
   ...meta,
   title: {
-    default: 'Interactive Tourism Guide for Benin',
-    template: `%s - Interactive Tourism Guide for Benin`,
+    default: 'FongBot 🇧🇯',
+    template: `%s - FongBot 🇧🇯`,
   },
   icons: {
     icon: '/favicon.ico',
