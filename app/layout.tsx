@@ -10,15 +10,15 @@ import { Header } from '@/components/header';
 import { Providers } from '@/components/providers';
 
 const meta = {
-  title: 'AI RSC Demo',
+  title: 'FongBot 🇧🇯',
   description:
     'Demo of an interactive financial assistant built using Next.js and Vercel AI SDK.',
 };
 export const metadata: Metadata = {
   ...meta,
   title: {
-    default: 'AI RSC Demo',
-    template: `%s - AI RSC Demo`,
+    default: 'FongBot 🇧🇯',
+    template: `%s - FongBot 🇧🇯`,
   },
   icons: {
     icon: '/favicon.ico',
