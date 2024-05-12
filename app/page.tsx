@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useUIState, useActions } from 'ai/rsc';
-import { UserMessage } from '@/components/llm-stocks/message';
+import { BotCard, UserMessage } from '@/components/llm-stocks/message';
 
 import { type AI } from './action';
 import { ChatScrollAnchor } from '@/lib/hooks/chat-scroll-anchor';
@@ -15,19 +15,28 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { IconArrowElbow, IconPlus } from '@/components/ui/icons';
+import { IconArrowElbow } from '@/components/ui/icons';
 import { Button } from '@/components/ui/button';
 import { ChatList } from '@/components/chat-list';
 import { EmptyScreen } from '@/components/empty-screen';
 import { AudioRecorder } from 'react-audio-voice-recorder';
-import OpenAI from 'openai';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { IoMdRefresh } from 'react-icons/io';
 
 export default function Page() {
   const [messages, setMessages] = useUIState<typeof AI>();
-  const { submitUserMessage } = useActions<typeof AI>();
+  const { submitUserMessage, submitFonMessage } = useActions<typeof AI>();
   const [inputValue, setInputValue] = useState('');
   const { formRef, onKeyDown } = useEnterSubmit();
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const searchParams = useSearchParams();
+
+  const stt = searchParams.get('stt');
+
+  const router = useRouter();
+
+  const sttFon = stt === 'fon';
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -53,12 +62,30 @@ export default function Page() {
     };
   }, [inputRef]);
 
+  const submitFn = sttFon ? submitFonMessage : submitUserMessage;
   return (
     <div>
       <div className="pb-[200px] pt-4 md:pt-10">
         {messages.length ? (
           <>
             <ChatList messages={messages} />
+          </>
+        ) : sttFon ? (
+          <>
+            <ChatList
+              messages={[
+                {
+                  id: '1',
+                  display: (
+                    <BotCard>
+                      You are now in Fon Talk mode. Use the microphone button to
+                      record your message in Fon or write a text in Fon and you
+                      will receive a translation and response in English.
+                    </BotCard>
+                  ),
+                },
+              ]}
+            />
           </>
         ) : (
           <EmptyScreen
@@ -73,7 +100,7 @@ export default function Page() {
               ]);
 
               // Submit and get response message
-              const responseMessage = await submitUserMessage(message);
+              const responseMessage = await submitFn(message);
               setMessages(currentMessages => [
                 ...currentMessages,
                 responseMessage,
@@ -111,7 +138,8 @@ export default function Page() {
 
                 try {
                   // Submit and get response message
-                  const responseMessage = await submitUserMessage(value);
+
+                  const responseMessage = await submitFn(value);
 
                   setMessages(currentMessages => [
                     ...currentMessages,
@@ -138,7 +166,7 @@ export default function Page() {
                       formData.append('file', audiofile);
                       formData.append('url', url);
 
-                      const responseMessage = await submitUserMessage(formData);
+                      const responseMessage = await submitFn(formData);
 
                       setMessages(currentMessages => [
                         ...currentMessages,
@@ -176,6 +204,24 @@ export default function Page() {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Send message</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        className="ml-2"
+                        onClick={() => {
+                          setInputValue('');
+                          setMessages([]);
+                          router.push('/');
+                        }}
+                        size="icon"
+                      >
+                        <IoMdRefresh />
+                        <span className="sr-only">Start again</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Start again</TooltipContent>
                   </Tooltip>
                 </div>
               </div>

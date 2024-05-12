@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { IconArrowRight } from '@/components/ui/icons';
+import Link from 'next/link';
 
 const exampleMessages = [
   {
@@ -52,6 +53,13 @@ export function EmptyScreen({
               {message.heading}
             </Button>
           ))}
+
+          <Link href="?stt=fon">
+            <Button variant="link" className="h-auto p-0 text-base">
+              <IconArrowRight className="mr-2 text-muted-foreground" />
+              Talk in Fon
+            </Button>
+          </Link>
         </div>
       </div>
       <p className="leading-normal text-muted-foreground text-[0.8rem] text-center max-w-96 ml-auto mr-auto">

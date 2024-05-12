@@ -30,6 +30,23 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',
 });
 
+async function sttFon(data: any) {
+  'use server';
+
+  const response = await fetch(
+    'https://api-inference.huggingface.co/models/chrisjay/fonxlsr',
+    {
+      headers: {
+        Authorization: `Bearer ${inferenceApiKey}`,
+      },
+      method: 'POST',
+      body: data,
+    },
+  );
+  const result = await response.json();
+  return result;
+}
+
 const inferenceApiKey = process.env.HUGGINGFACE_API_KEY || '';
 
 const blobToBase64 = async (blob: Blob) => {
@@ -54,26 +71,177 @@ async function ttsFon(data: string) {
   return result;
 }
 
-async function sttFon(data: any) {
-  'use server';
-
-  const response = await fetch(
-    'https://api-inference.huggingface.co/models/chrisjay/fonxlsr',
-    {
-      headers: {
-        Authorization: `Bearer ${inferenceApiKey}`,
-      },
-      method: 'POST',
-      body: data,
-    },
-  );
-  const result = await response.json();
-  return result;
-}
-
 const Row = ({ children }: { children: React.ReactNode }) => (
   <li className="flex items-center gap-2">{children}</li>
 );
+
+async function submitFonMessage(content: string | FormData) {
+  'use server';
+
+  const aiState = getMutableAIState<typeof AI>();
+
+  const checkIcon = <FaRegCheckCircle className="text-green-500 h-5 w-5" />;
+
+  const reply = createStreamableUI(
+    <BotMessage className="items-center">{spinner}</BotMessage>,
+  );
+
+  let srcAudio = null;
+
+  if (content instanceof FormData) {
+    reply.update(
+      <BotCard>
+        <ul>
+          <Row>Transcribing Fon audio {spinner}</Row>
+        </ul>
+      </BotCard>,
+    );
+
+    const audiofile = content.get('file') as File;
+    const audioUrl = content.get('url') as string;
+
+    srcAudio = audioUrl;
+
+    const stt = await sttFon(audiofile);
+
+    content = stt.text as string;
+
+    reply.update(
+      <BotCard>
+        <ul>
+          <Row>Transcribing Fon audio {checkIcon}</Row>
+        </ul>
+      </BotCard>,
+    );
+  }
+
+  aiState.update([
+    ...aiState.get(),
+    {
+      role: 'user',
+      content,
+    },
+  ]);
+
+  const completion = runOpenAICompletion(openai, {
+    model: 'gpt-4-turbo',
+    stream: true,
+    messages: [
+      {
+        role: 'system',
+        content: `\
+        You are an expert Fon translator, the user will ask or submit a text in Fon and you will translate it to English. You can also provide additional information about the Fon culture related to what the user submitted.
+
+        You will always call the function \`translate_fon_en\` when the user submits a text`,
+      },
+      ...aiState.get().map((info: any) => ({
+        role: info.role,
+        content: info.content,
+        name: info.name,
+      })),
+    ],
+    functions: [
+      {
+        name: 'translate_fon_en',
+        description: 'Translate text from Fon to English.',
+        parameters: z.object({
+          text: z.string().describe('The text to be translated.'),
+          additionalInfo: z
+            .string()
+            .describe(
+              'Additional information about the word or what the user submitted related to the Fon Culture',
+            ),
+        }),
+      },
+    ],
+
+    temperature: 0,
+  });
+
+  completion.onTextContent((content: string, isFinal: boolean) => {
+    reply.update(<BotMessage>{spinner}</BotMessage>);
+    if (isFinal) {
+      reply.done();
+      aiState.done([...aiState.get(), { role: 'assistant', content }]);
+    }
+  });
+
+  completion.onFunctionCall(
+    'translate_fon_en',
+    async ({ text, additionalInfo }) => {
+      reply.update(
+        <BotCard>
+          <ul>
+            <Row>Transcribing Fon audio {checkIcon}</Row>
+            <Row>Translating to English {spinner}</Row>
+          </ul>
+        </BotCard>,
+      );
+
+      const response = await fetch(
+        `https://translator-api.glosbe.com/translateByLang?sourceLang=fon&targetLang=en`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain',
+          },
+          body: text,
+        },
+      );
+
+      const jsonResponse = await response.json();
+
+      reply.update(
+        <BotCard>
+          <ul>
+            <Row>Transcribing Fon audio {checkIcon}</Row>
+            <Row>Translating to English {checkIcon}</Row>
+            <Row>Generating response {spinner}</Row>
+          </ul>
+        </BotCard>,
+      );
+
+      await sleep(1000);
+
+      reply.update(
+        <BotCard>
+          <ul>
+            <Row>Transcribing Fon audio {checkIcon}</Row>
+            <Row>Translating to English {checkIcon}</Row>
+            <Row>Generating response {checkIcon}</Row>
+          </ul>
+        </BotCard>,
+      );
+
+      await sleep(1000);
+
+      reply.done(
+        <BotCard>
+          The translation of "{text}" from Fon to English is "
+          {jsonResponse?.translation}"<br />
+          {additionalInfo}
+        </BotCard>,
+      );
+
+      aiState.done([
+        ...aiState.get(),
+        {
+          role: 'function',
+          name: 'translate_fon_en',
+          content: JSON.stringify({
+            text,
+            additionalInfo,
+          }),
+        },
+      ]);
+    },
+  );
+
+  return {
+    id: Date.now(),
+    display: reply.value,
+  };
+}
 
 async function submitUserMessage(content: string | FormData) {
   'use server';
@@ -447,6 +615,7 @@ const initialUIState: {
 export const AI = createAI({
   actions: {
     submitUserMessage,
+    submitFonMessage,
   },
   initialUIState,
   initialAIState,
