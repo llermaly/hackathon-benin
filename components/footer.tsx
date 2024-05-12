@@ -12,7 +12,7 @@ export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
       )}
       {...props}
     >
-      AI Chatbot to translate texts between English and Fon.
+      AI Chatbot to help you prepare for your journey to Benin.{' '}
     </p>
   );
 }

@@ -1,19 +1,19 @@
 import { Button } from '@/components/ui/button';
-import { ExternalLink } from '@/components/external-link';
 import { IconArrowRight } from '@/components/ui/icons';
 
 const exampleMessages = [
   {
-    heading: 'Translate "Hello" into Fon',
-    message: 'Hello',
+    heading: 'Translating English to Fon',
+    message: 'How do I say "Hello my friend" in Fon?',
   },
   {
-    heading: 'Translate "How are you?" into Fon',
-    message: 'How are you?',
+    heading: 'Asking about Fon translations',
+    message: 'What is the translation of "Wǎ nú xɔ́ntɔn ce!" in English?',
   },
   {
-    heading: 'Translate "Good morning" into Fon',
-    message: 'Good morning',
+    heading: 'Places suggestions',
+    message:
+      'Can you recommend some places to visit in Benin about the Fon culture?',
   },
 ];
 
@@ -26,32 +26,18 @@ export function EmptyScreen({
     <div className="mx-auto max-w-2xl px-4">
       <div className="rounded-lg border bg-background p-8 mb-4">
         <h1 className="mb-2 text-lg font-semibold">
-          Welcome to the Language Translation UI demo!
+          Welcome to the Interactive Tourism Guide for Benin!
         </h1>
         <p className="mb-2 leading-normal text-muted-foreground">
-          This is a demo of an interactive translation assistant. It can help
-          you translate text from any language into Fon.
+          This demo showcases an AI-powered assistant that is tailored to help
+          tourists prepare for their journey to Benin, immersing them in Fon
+          culture and facilitating communication. Built using advanced AI
+          technology, this assistant is a specialist in the Fon culture and
+          provides expert translations between English and Fon. It also creates
+          visual content that enriches the user's understanding of Benin.
         </p>
-        <p className="mb-2 leading-normal text-muted-foreground">
-          The demo is built with{' '}
-          <ExternalLink href="https://nextjs.org">Next.js</ExternalLink> and
-          utilizes the{' '}
-          <ExternalLink href="https://sdk.vercel.ai/docs">
-            Vercel AI SDK
-          </ExternalLink>
-          .
-        </p>
-        <p className="mb-2 leading-normal text-muted-foreground">
-          It leverages{' '}
-          <ExternalLink href="https://vercel.com/blog/ai-sdk-3-generative-ui">
-            React Server Components
-          </ExternalLink>{' '}
-          to dynamically generate UI elements that are aware of your
-          interactions in real-time.
-        </p>
-        <p className="leading-normal text-muted-foreground">
-          Try translating a phrase:
-        </p>
+
+        <p className="leading-normal text-muted-foreground">Try:</p>
         <div className="mt-4 flex flex-col items-start space-y-2 mb-4">
           {exampleMessages.map((message, index) => (
             <Button

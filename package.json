@@ -38,6 +38,7 @@
     "react": "^18",
     "react-audio-voice-recorder": "^2.2.0",
     "react-dom": "^18",
+    "react-icons": "^5.2.1",
     "react-intersection-observer": "^9.8.0",
     "react-textarea-autosize": "^8.5.3",
     "tailwind-merge": "^2.2.1",
