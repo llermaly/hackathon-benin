@@ -3,25 +3,9 @@ import 'server-only';
 import { createAI, createStreamableUI, getMutableAIState } from 'ai/rsc';
 import OpenAI from 'openai';
 
-import fs from 'fs';
+import { spinner, BotCard, BotMessage } from '@/components/llm-stocks';
 
-import {
-  spinner,
-  BotCard,
-  BotMessage,
-  SystemMessage,
-  Stock,
-  Purchase,
-  Stocks,
-  Events,
-} from '@/components/llm-stocks';
-
-import {
-  runAsyncFnWithoutBlocking,
-  sleep,
-  formatNumber,
-  runOpenAICompletion,
-} from '@/lib/utils';
+import { sleep, runOpenAICompletion } from '@/lib/utils';
 import { z } from 'zod';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FaRegCheckCircle } from 'react-icons/fa';
