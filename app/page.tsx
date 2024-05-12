@@ -19,6 +19,8 @@ import { IconArrowElbow, IconPlus } from '@/components/ui/icons';
 import { Button } from '@/components/ui/button';
 import { ChatList } from '@/components/chat-list';
 import { EmptyScreen } from '@/components/empty-screen';
+import { AudioRecorder } from 'react-audio-voice-recorder';
+import OpenAI from 'openai';
 
 export default function Page() {
   const [messages, setMessages] = useUIState<typeof AI>();
@@ -110,6 +112,7 @@ export default function Page() {
                 try {
                   // Submit and get response message
                   const responseMessage = await submitUserMessage(value);
+
                   setMessages(currentMessages => [
                     ...currentMessages,
                     responseMessage,
@@ -121,23 +124,29 @@ export default function Page() {
               }}
             >
               <div className="relative flex flex-col w-full px-8 overflow-hidden max-h-60 grow bg-background sm:rounded-md sm:border sm:px-12">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="absolute left-0 w-8 h-8 p-0 rounded-full top-4 bg-background sm:left-4"
-                      onClick={e => {
-                        e.preventDefault();
-                        window.location.reload();
-                      }}
-                    >
-                      <IconPlus />
-                      <span className="sr-only">New Chat</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>New Chat</TooltipContent>
-                </Tooltip>
+                <div className="absolute left-0  p-0 rounded-full top-2 bg-background sm:left-4">
+                  <AudioRecorder
+                    onRecordingComplete={async blob => {
+                      const url = URL.createObjectURL(blob);
+
+                      const formData = new FormData();
+
+                      const audiofile = new File([blob], 'audiofile', {
+                        type: 'audio/mp4',
+                      });
+
+                      formData.append('file', audiofile);
+                      formData.append('url', url);
+
+                      const responseMessage = await submitUserMessage(formData);
+
+                      setMessages(currentMessages => [
+                        ...currentMessages,
+                        responseMessage,
+                      ]);
+                    }}
+                  />
+                </div>
                 <Textarea
                   ref={inputRef}
                   tabIndex={0}
@@ -153,6 +162,7 @@ export default function Page() {
                   value={inputValue}
                   onChange={e => setInputValue(e.target.value)}
                 />
+
                 <div className="absolute right-0 top-4 sm:right-4">
                   <Tooltip>
                     <TooltipTrigger asChild>

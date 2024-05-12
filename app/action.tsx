@@ -29,77 +29,36 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',
 });
 
-async function confirmPurchase(symbol: string, price: number, amount: number) {
+async function submitUserMessage(content: string | FormData) {
   'use server';
 
   const aiState = getMutableAIState<typeof AI>();
 
-  const purchasing = createStreamableUI(
-    <div className="inline-flex items-start gap-1 md:items-center">
-      {spinner}
-      <p className="mb-2">
-        Purchasing {amount} ${symbol}...
-      </p>
-    </div>,
+  const reply = createStreamableUI(
+    <BotMessage className="items-center">{spinner}</BotMessage>,
   );
 
-  const systemMessage = createStreamableUI(null);
+  let srcAudio = null;
 
-  runAsyncFnWithoutBlocking(async () => {
-    // You can update the UI at any point.
-    await sleep(1000);
+  if (content instanceof FormData) {
+    reply.update(<BotMessage>Transcribing audio to text...</BotMessage>);
 
-    purchasing.update(
-      <div className="inline-flex items-start gap-1 md:items-center">
-        {spinner}
-        <p className="mb-2">
-          Purchasing {amount} ${symbol}... working on it...
-        </p>
-      </div>,
-    );
+    const audiofile = content.get('file') as File;
+    const audioUrl = content.get('url') as string;
 
-    await sleep(1000);
+    const blob = new Blob([audiofile], { type: 'audio/wav' });
 
-    purchasing.done(
-      <div>
-        <p className="mb-2">
-          You have successfully purchased {amount} ${symbol}. Total cost:{' '}
-          {formatNumber(amount * price)}
-        </p>
-      </div>,
-    );
+    srcAudio = audioUrl;
 
-    systemMessage.done(
-      <SystemMessage>
-        You have purchased {amount} shares of {symbol} at ${price}. Total cost ={' '}
-        {formatNumber(amount * price)}.
-      </SystemMessage>,
-    );
+    const transcription = await openai.audio.transcriptions.create({
+      file: audiofile,
+      model: 'whisper-1',
+    });
 
-    aiState.done([
-      ...aiState.get(),
-      {
-        role: 'system',
-        content: `[User has purchased ${amount} shares of ${symbol} at ${price}. Total cost = ${
-          amount * price
-        }]`,
-      },
-    ]);
-  });
+    content = transcription.text;
 
-  return {
-    purchasingUI: purchasing.value,
-    newMessage: {
-      id: Date.now(),
-      display: systemMessage.value,
-    },
-  };
-}
-
-async function submitUserMessage(content: string) {
-  'use server';
-
-  const aiState = getMutableAIState<typeof AI>();
+    reply.update(<BotMessage>Transcription result is: "{content}"</BotMessage>);
+  }
 
   aiState.update([
     ...aiState.get(),
@@ -108,10 +67,6 @@ async function submitUserMessage(content: string) {
       content,
     },
   ]);
-
-  const reply = createStreamableUI(
-    <BotMessage className="items-center">{spinner}</BotMessage>,
-  );
 
   const completion = runOpenAICompletion(openai, {
     model: 'gpt-4',
@@ -190,7 +145,15 @@ async function submitUserMessage(content: string) {
       reply.done(
         <BotCard>
           <div>
-            <p>Text: {text}</p>
+            {srcAudio && (
+              <p>
+                <span>Audio:</span>
+                <audio src={srcAudio} controls className="w-full" />
+              </p>
+            )}
+            <p>
+              {srcAudio ? 'Transcript' : 'Text'}: {text}
+            </p>
             <p>Translation: {jsonResponse?.translation}</p>
           </div>
         </BotCard>,

@@ -30,6 +30,7 @@
     "next-themes": "^0.2.1",
     "openai": "^4.28.4",
     "react": "^18",
+    "react-audio-voice-recorder": "^2.2.0",
     "react-dom": "^18",
     "react-intersection-observer": "^9.8.0",
     "react-textarea-autosize": "^8.5.3",
