@@ -3,6 +3,8 @@ import 'server-only';
 import { createAI, createStreamableUI, getMutableAIState } from 'ai/rsc';
 import OpenAI from 'openai';
 
+import fs from 'fs';
+
 import {
   spinner,
   BotCard,
@@ -29,6 +31,25 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',
 });
 
+const inferenceApiKey = process.env.HUGGINGFACE_API_KEY || '';
+
+async function ttsFon(data: string) {
+  'use server';
+  const response = await fetch(
+    'https://api-inference.huggingface.co/models/facebook/mms-tts-fon',
+    {
+      headers: {
+        Authorization: `Bearer ${inferenceApiKey}`,
+      },
+      method: 'POST',
+      body: data,
+    },
+  );
+  const result = await response.blob();
+  let buffer = Buffer.from(await result.arrayBuffer());
+  return 'data:' + result.type + ';base64,' + buffer.toString('base64');
+}
+
 async function submitUserMessage(content: string | FormData) {
   'use server';
 
@@ -45,8 +66,6 @@ async function submitUserMessage(content: string | FormData) {
 
     const audiofile = content.get('file') as File;
     const audioUrl = content.get('url') as string;
-
-    const blob = new Blob([audiofile], { type: 'audio/wav' });
 
     srcAudio = audioUrl;
 
@@ -142,12 +161,13 @@ async function submitUserMessage(content: string | FormData) {
 
       const jsonResponse = await response.json();
 
+      const base64Audio = await ttsFon(jsonResponse.translation);
+
       reply.done(
         <BotCard>
           <div>
             {srcAudio && (
               <p>
-                <span>Audio:</span>
                 <audio src={srcAudio} controls className="w-full" />
               </p>
             )}
@@ -155,6 +175,11 @@ async function submitUserMessage(content: string | FormData) {
               {srcAudio ? 'Transcript' : 'Text'}: {text}
             </p>
             <p>Translation: {jsonResponse?.translation}</p>
+            {base64Audio && (
+              <p>
+                <audio src={base64Audio} controls className="w-full" />
+              </p>
+            )}
           </div>
         </BotCard>,
       );
