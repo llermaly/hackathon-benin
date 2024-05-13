@@ -339,16 +339,6 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
         description: 'Translate text from Fon to English.',
         parameters: z.object({
           text: z.string().describe('The text to be translated.'),
-          additionalInfo: z
-            .string()
-            .describe(
-              'Additional information talking about the Fon Cultured related to the word or text the user wants to translate.',
-            ),
-          additionalImageText: z
-            .string()
-            .describe(
-              'Additional text to generate an image about the Fon Culture related to what the user asked.',
-            ),
         }),
       },
       {
@@ -455,158 +445,158 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
       },
     ]);
   });
-  completion.onFunctionCall(
-    'translate_fon_en',
-    async ({ text, additionalInfo, additionalImageText }) => {
+  completion.onFunctionCall('translate_fon_en', async ({ text }) => {
+    reply.update(
+      <BotCard>
+        <ul>
+          <Row>Generating Fon audio {spinner}</Row>
+        </ul>
+      </BotCard>,
+    );
+    try {
+      const blob = await ttsFon(text);
+      const base64Audio = await blobToBase64(blob);
+
       reply.update(
         <BotCard>
           <ul>
-            <Row>Generating Fon audio {spinner}</Row>
+            <Row>Generating Fon audio {checkIcon}</Row>
+            <Row>Translating from Fon to English {spinner}</Row>
           </ul>
         </BotCard>,
       );
-      try {
-        const blob = await ttsFon(text);
-        const base64Audio = await blobToBase64(blob);
 
-        reply.update(
-          <BotCard>
-            <ul>
-              <Row>Generating Fon audio {checkIcon}</Row>
-              <Row>Translating from Fon to English {spinner}</Row>
-            </ul>
-          </BotCard>,
-        );
-
-        const response = await fetch(
-          `https://translator-api.glosbe.com/translateByLang?sourceLang=fon&targetLang=en`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'text/plain',
-            },
-            body: text,
-          },
-        );
-
-        const jsonResponse = await response.json();
-
-        reply.update(
-          <BotCard>
-            <ul>
-              <Row>Generating Fon audio {checkIcon}</Row>
-              <Row>Translating from Fon to English {checkIcon}</Row>
-              <Row>Generating additional information {spinner}</Row>
-            </ul>
-          </BotCard>,
-        );
-
-        await sleep(1000);
-
-        reply.update(
-          <BotCard>
-            <ul>
-              <Row>Generating Fon audio {checkIcon}</Row>
-              <Row>Translating from Fon to English {checkIcon}</Row>
-              <Row>Generating additional information {checkIcon}</Row>
-            </ul>
-          </BotCard>,
-        );
-
-        await sleep(1000);
-
-        reply.update(
-          <BotCard>
-            <ul>
-              <Row>Generating Fon audio {checkIcon}</Row>
-              <Row>Translating from Fon to English {checkIcon}</Row>
-              <Row>Generating additional information {checkIcon}</Row>
-              <Row>Generating additional image {spinner}</Row>
-            </ul>
-            <div className="mt-2">
-              The pronunciation of "{text}" in Fon is:
-              <audio src={base64Audio} controls className="w-full mt-2" />
-            </div>
-            <div className="mt-1">
-              The translation to English is "{jsonResponse?.translation}"<br />
-              {additionalInfo}
-            </div>
-            <Skeleton className="w-full max-w-[632px] h-[632px] rounded-lg my-2" />
-          </BotCard>,
-        );
-
-        const imageResponse = await openai.images.generate({
-          model: 'dall-e-3',
-          prompt: additionalImageText,
-          n: 1,
-          size: '1024x1024',
-        });
-
-        const imgUrl = imageResponse.data[0].url;
-
-        reply.update(
-          <BotCard>
-            <ul className="border-b border-gray-300">
-              <Row>Generating Fon audio {checkIcon}</Row>
-              <Row>Translating from Fon to English {checkIcon}</Row>
-              <Row>Generating additional information {checkIcon}</Row>
-              <Row>Generating additional image {checkIcon}</Row>
-            </ul>
-            <div className="mt-2">
-              The pronunciation of "{text}" in Fon is:
-              <audio src={base64Audio} controls className="w-full mt-2" />
-            </div>
-            <div className="mt-1">
-              The translation to English is "{jsonResponse?.translation}"<br />
-              {additionalInfo}
-            </div>
-            <img
-              src={imgUrl}
-              alt="Generated image"
-              className="mt-2 rounded-lg"
-            />
-          </BotCard>,
-        );
-
-        reply.done(
-          <BotCard>
-            <div>
-              The pronunciation of "{text}" in Fon is:
-              <audio src={base64Audio} controls className="w-full mt-2" />
-            </div>
-            <div className="mt-1">
-              The translation to English is "{jsonResponse?.translation}"<br />
-              {additionalInfo}
-            </div>
-            <img
-              src={imgUrl}
-              alt="Generated image"
-              className="mt-2 rounded-lg"
-            />
-          </BotCard>,
-        );
-      } catch (error) {
-        reply.done(
-          <BotCard>
-            Huggingface API is not available or models are not loaded, please
-            try again later.
-          </BotCard>,
-        );
-      }
-
-      aiState.done([
-        ...aiState.get(),
+      const response = await fetch(
+        `https://translator-api.glosbe.com/translateByLang?sourceLang=fon&targetLang=en`,
         {
-          role: 'function',
-          name: 'translate_fon_en',
-          content: JSON.stringify({
-            text,
-            additionalInfo,
-          }),
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain',
+          },
+          body: text,
         },
-      ]);
-    },
-  );
+      );
+
+      const jsonResponse = await response.json();
+
+      reply.update(
+        <BotCard>
+          <ul>
+            <Row>Generating Fon audio {checkIcon}</Row>
+            <Row>Translating from Fon to English {checkIcon}</Row>
+            <Row>Generating additional information {spinner}</Row>
+          </ul>
+        </BotCard>,
+      );
+
+      const additionalInfoResponse = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          { role: 'system', content: 'You are a helpful assistant.' },
+          {
+            role: 'user',
+            content: `Generate some additional information about the text/word ${jsonResponse.translation} in the Fon Culture in maximum 50 words`,
+          },
+        ],
+        max_tokens: 200,
+      });
+
+      const additionalInfo = additionalInfoResponse.choices[0].message.content;
+
+      reply.update(
+        <BotCard>
+          <ul>
+            <Row>Generating Fon audio {checkIcon}</Row>
+            <Row>Translating from Fon to English {checkIcon}</Row>
+            <Row>Generating additional information {checkIcon}</Row>
+          </ul>
+        </BotCard>,
+      );
+
+      await sleep(1000);
+
+      reply.update(
+        <BotCard>
+          <ul>
+            <Row>Generating Fon audio {checkIcon}</Row>
+            <Row>Translating from Fon to English {checkIcon}</Row>
+            <Row>Generating additional information {checkIcon}</Row>
+            <Row>Generating additional image {spinner}</Row>
+          </ul>
+          <div className="mt-2">
+            The pronunciation of "{text}" in Fon is:
+            <audio src={base64Audio} controls className="w-full mt-2" />
+          </div>
+          <div className="mt-1">
+            The translation to English is "{jsonResponse?.translation}"<br />
+            <div className="mt-2">{additionalInfo}</div>
+          </div>
+          <Skeleton className="w-full max-w-[632px] h-[632px] rounded-lg my-2" />
+        </BotCard>,
+      );
+
+      const imageResponse = await openai.images.generate({
+        model: 'dall-e-3',
+        prompt: `Generate an image of Fon culture related to the text ${jsonResponse?.translation}`,
+        n: 1,
+        size: '1024x1024',
+      });
+
+      const imgUrl = imageResponse.data[0].url;
+
+      reply.update(
+        <BotCard>
+          <ul className="border-b border-gray-300">
+            <Row>Generating Fon audio {checkIcon}</Row>
+            <Row>Translating from Fon to English {checkIcon}</Row>
+            <Row>Generating additional information {checkIcon}</Row>
+            <Row>Generating additional image {checkIcon}</Row>
+          </ul>
+          <div className="mt-2">
+            The pronunciation of "{text}" in Fon is:
+            <audio src={base64Audio} controls className="w-full mt-2" />
+          </div>
+          <div className="mt-1">
+            The translation to English is "{jsonResponse?.translation}"<br />
+            <div className="mt-2">{additionalInfo}</div>
+          </div>
+          <img src={imgUrl} alt="Generated image" className="mt-2 rounded-lg" />
+        </BotCard>,
+      );
+
+      reply.done(
+        <BotCard>
+          <div>
+            The pronunciation of "{text}" in Fon is:
+            <audio src={base64Audio} controls className="w-full mt-2" />
+          </div>
+          <div className="mt-1">
+            The translation to English is "{jsonResponse?.translation}"<br />
+            <div className="mt-2">{additionalInfo}</div>
+          </div>
+          <img src={imgUrl} alt="Generated image" className="mt-2 rounded-lg" />
+        </BotCard>,
+      );
+    } catch (error) {
+      reply.done(
+        <BotCard>
+          Huggingface API is not available or models are not loaded, please try
+          again later.
+        </BotCard>,
+      );
+    }
+
+    aiState.done([
+      ...aiState.get(),
+      {
+        role: 'function',
+        name: 'translate_fon_en',
+        content: JSON.stringify({
+          text,
+        }),
+      },
+    ]);
+  });
   completion.onFunctionCall(
     'places_recommendations',
     async ({ recommendations }) => {
