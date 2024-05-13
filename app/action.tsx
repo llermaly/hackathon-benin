@@ -306,7 +306,7 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
           additionalInfo: z
             .string()
             .describe(
-              'Additional information about the Fon culture, related to what the user asked.',
+              'Additional information talking about the Fon Cultured related to the word or text the user wants to translate.',
             ),
           additionalImageText: z
             .string()
