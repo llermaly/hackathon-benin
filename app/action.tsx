@@ -517,7 +517,13 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
 
         reply.update(
           <BotCard>
-            <div>
+            <ul>
+              <Row>Generating Fon audio {checkIcon}</Row>
+              <Row>Translating from Fon to English {checkIcon}</Row>
+              <Row>Generating additional information {checkIcon}</Row>
+              <Row>Generating additional image {spinner}</Row>
+            </ul>
+            <div className="mt-2">
               The pronunciation of "{text}" in Fon is:
               <audio src={base64Audio} controls className="w-full mt-2" />
             </div>
@@ -537,6 +543,30 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
         });
 
         const imgUrl = imageResponse.data[0].url;
+
+        reply.update(
+          <BotCard>
+            <ul className="border-b border-gray-300">
+              <Row>Generating Fon audio {checkIcon}</Row>
+              <Row>Translating from Fon to English {checkIcon}</Row>
+              <Row>Generating additional information {checkIcon}</Row>
+              <Row>Generating additional image {checkIcon}</Row>
+            </ul>
+            <div className="mt-2">
+              The pronunciation of "{text}" in Fon is:
+              <audio src={base64Audio} controls className="w-full mt-2" />
+            </div>
+            <div className="mt-1">
+              The translation to English is "{jsonResponse?.translation}"<br />
+              {additionalInfo}
+            </div>
+            <img
+              src={imgUrl}
+              alt="Generated image"
+              className="mt-2 rounded-lg"
+            />
+          </BotCard>,
+        );
 
         reply.done(
           <BotCard>
