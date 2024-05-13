@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { IconArrowRight } from '@/components/ui/icons';
 import Link from 'next/link';
+import { IoMdRefresh } from 'react-icons/io';
+import ModelStatus from './model-status';
 
 const exampleMessages = [
   {
@@ -61,6 +63,7 @@ export function EmptyScreen({
             </Button>
           </Link>
         </div>
+        <ModelStatus />
       </div>
       <p className="leading-normal text-muted-foreground text-[0.8rem] text-center max-w-96 ml-auto mr-auto">
         Note: Translations are simulated for illustrative purposes. Please

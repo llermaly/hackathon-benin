@@ -13,6 +13,7 @@ import { FaRegCheckCircle } from 'react-icons/fa';
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',
 });
+const inferenceApiKey = process.env.HUGGINGFACE_API_KEY || '';
 
 async function sttFon(data: any) {
   'use server';
@@ -27,11 +28,13 @@ async function sttFon(data: any) {
       body: data,
     },
   );
+  if (response.status !== 200) {
+    throw new Error('An error occurred');
+  }
   const result = await response.json();
+
   return result;
 }
-
-const inferenceApiKey = process.env.HUGGINGFACE_API_KEY || '';
 
 const blobToBase64 = async (blob: Blob) => {
   let buffer = Buffer.from(await blob.arrayBuffer());
@@ -50,6 +53,9 @@ async function ttsFon(data: string) {
       body: data,
     },
   );
+  if (response.status !== 200) {
+    throw new Error('An error occurred');
+  }
 
   const result = await response.blob();
   return result;
