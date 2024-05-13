@@ -86,7 +86,37 @@ async function submitFonMessage(content: string | FormData) {
 
     srcAudio = audioUrl;
 
-    const stt = await sttFon(audiofile);
+    let stt = null;
+
+    try {
+      stt = await sttFon(audiofile);
+    } catch (error) {
+      reply.done(
+        <BotCard>
+          Huggingface API is not available or models are not loaded, please try
+          again later.
+        </BotCard>,
+      );
+      return {
+        id: Date.now(),
+        display: reply.value,
+      };
+    }
+
+    if (!stt?.text || stt?.text?.trim() === '') {
+      reply.done(
+        <BotCard>
+          <ul>
+            <Row>Transcribing Fon audio {checkIcon}</Row>
+          </ul>
+          <p>Could not found any text in the audio, please try again.</p>
+        </BotCard>,
+      );
+      return {
+        id: Date.now(),
+        display: reply.value,
+      };
+    }
 
     content = stt.text as string;
 
