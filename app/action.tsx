@@ -373,32 +373,40 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
         </ul>
       </BotCard>,
     );
+    try {
+      const blob = await ttsFon(jsonResponse.translation);
+      const base64Audio = await blobToBase64(blob);
 
-    const blob = await ttsFon(jsonResponse.translation);
-    const base64Audio = await blobToBase64(blob);
+      reply.update(
+        <BotCard>
+          <ul>
+            <Row>Translating from English to Fon {checkIcon}</Row>
+            <Row>Generating Fon audio {checkIcon}</Row>
+          </ul>
+        </BotCard>,
+      );
 
-    reply.update(
-      <BotCard>
-        <ul>
-          <Row>Translating from English to Fon {checkIcon}</Row>
-          <Row>Generating Fon audio {checkIcon}</Row>
-        </ul>
-      </BotCard>,
-    );
+      await sleep(1000);
 
-    await sleep(1000);
+      // const stt = await sttFon(blob);
 
-    // const stt = await sttFon(blob);
-
-    reply.done(
-      <BotCard>
-        The translation of "{text}" from English to Fon is "
-        {jsonResponse?.translation}"
-        <br />
-        and the pronunciation in Fon is:
-        <audio src={base64Audio} controls className="w-full mt-2" />
-      </BotCard>,
-    );
+      reply.done(
+        <BotCard>
+          The translation of "{text}" from English to Fon is "
+          {jsonResponse?.translation}"
+          <br />
+          and the pronunciation in Fon is:
+          <audio src={base64Audio} controls className="w-full mt-2" />
+        </BotCard>,
+      );
+    } catch (error) {
+      reply.done(
+        <BotCard>
+          Huggingface API is not available or models are not loaded, please try
+          again later.
+        </BotCard>,
+      );
+    }
 
     aiState.done([
       ...aiState.get(),
@@ -421,90 +429,104 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
           </ul>
         </BotCard>,
       );
+      try {
+        const blob = await ttsFon(text);
+        const base64Audio = await blobToBase64(blob);
 
-      const blob = await ttsFon(text);
-      const base64Audio = await blobToBase64(blob);
+        reply.update(
+          <BotCard>
+            <ul>
+              <Row>Generating Fon audio {checkIcon}</Row>
+              <Row>Translating from Fon to English {spinner}</Row>
+            </ul>
+          </BotCard>,
+        );
 
-      reply.update(
-        <BotCard>
-          <ul>
-            <Row>Generating Fon audio {checkIcon}</Row>
-            <Row>Translating from Fon to English {spinner}</Row>
-          </ul>
-        </BotCard>,
-      );
-
-      const response = await fetch(
-        `https://translator-api.glosbe.com/translateByLang?sourceLang=fon&targetLang=en`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'text/plain',
+        const response = await fetch(
+          `https://translator-api.glosbe.com/translateByLang?sourceLang=fon&targetLang=en`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'text/plain',
+            },
+            body: text,
           },
-          body: text,
-        },
-      );
+        );
 
-      const jsonResponse = await response.json();
+        const jsonResponse = await response.json();
 
-      reply.update(
-        <BotCard>
-          <ul>
-            <Row>Generating Fon audio {checkIcon}</Row>
-            <Row>Translating from Fon to English {checkIcon}</Row>
-            <Row>Generating additional information {spinner}</Row>
-          </ul>
-        </BotCard>,
-      );
+        reply.update(
+          <BotCard>
+            <ul>
+              <Row>Generating Fon audio {checkIcon}</Row>
+              <Row>Translating from Fon to English {checkIcon}</Row>
+              <Row>Generating additional information {spinner}</Row>
+            </ul>
+          </BotCard>,
+        );
 
-      await sleep(1000);
+        await sleep(1000);
 
-      reply.update(
-        <BotCard>
-          <ul>
-            <Row>Generating Fon audio {checkIcon}</Row>
-            <Row>Translating from Fon to English {checkIcon}</Row>
-            <Row>Generating additional information {checkIcon}</Row>
-            <Row>Generating additional image {spinner}</Row>
-          </ul>
-        </BotCard>,
-      );
+        reply.update(
+          <BotCard>
+            <ul>
+              <Row>Generating Fon audio {checkIcon}</Row>
+              <Row>Translating from Fon to English {checkIcon}</Row>
+              <Row>Generating additional information {checkIcon}</Row>
+            </ul>
+          </BotCard>,
+        );
 
-      const imageResponse = await openai.images.generate({
-        model: 'dall-e-3',
-        prompt: additionalImageText,
-        n: 1,
-        size: '1024x1024',
-      });
+        await sleep(1000);
 
-      const imgUrl = imageResponse.data[0].url;
+        reply.update(
+          <BotCard>
+            <div>
+              The pronunciation of "{text}" in Fon is:
+              <audio src={base64Audio} controls className="w-full mt-2" />
+            </div>
+            <div className="mt-1">
+              The translation to English is "{jsonResponse?.translation}"<br />
+              {additionalInfo}
+            </div>
+            <Skeleton className="w-full max-w-[632px] h-[632px] rounded-lg my-2" />
+          </BotCard>,
+        );
 
-      reply.update(
-        <BotCard>
-          <ul>
-            <Row>Generating Fon audio {checkIcon}</Row>
-            <Row>Translating from Fon to English {checkIcon}</Row>
-            <Row>Generating additional information {checkIcon}</Row>
-            <Row>Generating additional image {checkIcon}</Row>
-          </ul>
-        </BotCard>,
-      );
+        const imageResponse = await openai.images.generate({
+          model: 'dall-e-3',
+          prompt: additionalImageText,
+          n: 1,
+          size: '1024x1024',
+        });
 
-      await sleep(1000);
+        const imgUrl = imageResponse.data[0].url;
 
-      reply.done(
-        <BotCard>
-          <div>
-            The pronunciation of "{text}" in Fon is:
-            <audio src={base64Audio} controls className="w-full mt-2" />
-          </div>
-          <div className="mt-1">
-            The translation to English is "{jsonResponse?.translation}"<br />
-            {additionalInfo}
-          </div>
-          <img src={imgUrl} alt="Generated image" className="mt-2" />
-        </BotCard>,
-      );
+        reply.done(
+          <BotCard>
+            <div>
+              The pronunciation of "{text}" in Fon is:
+              <audio src={base64Audio} controls className="w-full mt-2" />
+            </div>
+            <div className="mt-1">
+              The translation to English is "{jsonResponse?.translation}"<br />
+              {additionalInfo}
+            </div>
+            <img
+              src={imgUrl}
+              alt="Generated image"
+              className="mt-2 rounded-lg"
+            />
+          </BotCard>,
+        );
+      } catch (error) {
+        reply.done(
+          <BotCard>
+            Huggingface API is not available or models are not loaded, please
+            try again later.
+          </BotCard>,
+        );
+      }
 
       aiState.done([
         ...aiState.get(),
