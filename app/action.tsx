@@ -422,7 +422,11 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
           {jsonResponse?.translation}"
           <br />
           and the pronunciation in Fon is:
-          <audio src={base64Audio} controls className="w-full mt-2" />
+          <audio
+            src={base64Audio}
+            controls
+            className="w-full mt-2 bg-appOrange"
+          />
         </BotCard>,
       );
     } catch (error) {

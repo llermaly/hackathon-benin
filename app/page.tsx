@@ -22,6 +22,7 @@ import { EmptyScreen } from '@/components/empty-screen';
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { IoMdRefresh } from 'react-icons/io';
+import { Header } from '@/components/header';
 
 export default function Page() {
   const [messages, setMessages] = useUIState<typeof AI>();
@@ -65,6 +66,7 @@ export default function Page() {
   const submitFn = sttFon ? submitFonMessage : submitUserMessage;
   return (
     <div>
+      <Header showExtraMessage={messages.length === 0 && !sttFon} />
       <div className="pb-[200px] pt-4 md:pt-10">
         {messages.length ? (
           <>
@@ -110,9 +112,9 @@ export default function Page() {
         )}
         <ChatScrollAnchor trackVisibility={true} />
       </div>
-      <div className="fixed inset-x-0 bottom-0 w-full bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in dark:from-background/10 dark:from-10% dark:to-background/80 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
-        <div className="mx-auto sm:max-w-2xl sm:px-4">
-          <div className="px-4 py-2 space-y-4 border-t shadow-lg bg-background sm:rounded-t-xl sm:border md:py-4">
+      <div className="fixed inset-x-0 bottom-0 w-full  peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
+        <div className="mx-auto sm:max-w-4xl sm:px-4">
+          <div className="px-4 py-2 space-y-4  shadow-lg sm:rounded-t-xl  md:py-4">
             <form
               ref={formRef}
               onSubmit={async (e: any) => {
@@ -151,8 +153,8 @@ export default function Page() {
                 }
               }}
             >
-              <div className="relative flex flex-col w-full px-8 overflow-hidden max-h-60 grow bg-background sm:rounded-md sm:border sm:px-12">
-                <div className="absolute left-0  p-0 rounded-full top-2 bg-background sm:left-4">
+              <div className="relative flex flex-col w-full px-8 overflow-hidden max-h-60 grow  sm:rounded-md sm:border border-appOrange sm:px-12">
+                <div className="absolute left-0  p-0 rounded-full top-3  sm:left-4">
                   <AudioRecorder
                     onRecordingComplete={async blob => {
                       const url = URL.createObjectURL(blob);
@@ -180,7 +182,7 @@ export default function Page() {
                   tabIndex={0}
                   onKeyDown={onKeyDown}
                   placeholder="Send a message."
-                  className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
+                  className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none text-white"
                   autoFocus
                   spellCheck={false}
                   autoComplete="off"
@@ -195,21 +197,8 @@ export default function Page() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
-                        type="submit"
-                        size="icon"
-                        disabled={inputValue === ''}
-                      >
-                        <IconArrowElbow />
-                        <span className="sr-only">Send message</span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Send message</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
                         type="button"
-                        className="ml-2"
+                        className="ml-2 bg-appOrange hover:bg-appOrange "
                         onClick={() => {
                           setInputValue('');
                           setMessages([]);
@@ -217,7 +206,7 @@ export default function Page() {
                         }}
                         size="icon"
                       >
-                        <IoMdRefresh />
+                        <IoMdRefresh className="text-black" />
                         <span className="sr-only">Start again</span>
                       </Button>
                     </TooltipTrigger>
@@ -226,7 +215,6 @@ export default function Page() {
                 </div>
               </div>
             </form>
-            <FooterText className="hidden sm:block" />
           </div>
         </div>
       </div>

@@ -1,22 +1,51 @@
-import { Button } from '@/components/ui/button';
-import { IconArrowRight } from '@/components/ui/icons';
+'use client';
 import Link from 'next/link';
-import { IoMdRefresh } from 'react-icons/io';
-import ModelStatus from './model-status';
+import { useState } from 'react';
+
+const quickAnswers = [
+  {
+    title: 'Food',
+    image: '🍲',
+    items: ['🍎 Apple', '💧 Water', '🌮 Lunch'],
+  },
+  {
+    title: 'Hotel',
+    image: '🏨',
+    items: ['🛏️ Bed', '🚿 Shower', '🍳 Breakfast'],
+  },
+  {
+    title: 'Transport',
+    image: '🚗',
+    items: ['🚕 Taxi', '🚆 Train', '🚌 Bus'],
+  },
+  {
+    title: 'Shopping',
+    image: '🛍️',
+    items: ['👗 Dress', '👠 Shoes', '👜 Bag'],
+  },
+  {
+    title: 'Emergency',
+    image: '🚑',
+    items: ['🩺 Doctor', '🚓 Police', '🔥 Fire'],
+  },
+];
 
 const exampleMessages = [
   {
     heading: 'Translating English to Fon',
     message: 'How do I say "Hello my friend" in Fon?',
+    image: '🇺🇸 -> 🇧🇯',
   },
   {
     heading: 'Asking about Fon translations',
     message: 'What is the translation of "Wǎ nú xɔ́ntɔn ce!" in English?',
+    image: '🇧🇯',
   },
   {
     heading: 'Places suggestions',
     message:
       'Can you recommend some places to visit in Benin about the Fon culture?',
+    image: '🏰',
   },
 ];
 
@@ -25,50 +54,69 @@ export function EmptyScreen({
 }: {
   submitMessage: (message: string) => void;
 }) {
+  const [active, setActive] = useState('Food');
   return (
     <div className="mx-auto max-w-2xl px-4">
-      <div className="rounded-lg border bg-background p-8 mb-4">
-        <h1 className="mb-2 text-lg font-semibold">
-          Welcome to the Interactive Tourism Guide for Benin!
-        </h1>
-        <p className="mb-2 leading-normal text-muted-foreground">
-          This demo showcases an AI-powered assistant that is tailored to help
-          tourists prepare for their journey to Benin, immersing them in Fon
-          culture and facilitating communication. Built using advanced AI
-          technology, this assistant is a specialist in the Fon culture and
-          provides expert translations between English and Fon. It also creates
-          visual content that enriches the user's understanding of Benin.
-        </p>
-
-        <p className="leading-normal text-muted-foreground">Try:</p>
-        <div className="mt-4 flex flex-col items-start space-y-2 mb-4">
-          {exampleMessages.map((message, index) => (
-            <Button
+      <div className="flex justify-center flex-col items-center">
+        <h3 className="text-white text-2xl font-semibold">What can I do ?</h3>
+        <div className="flex gap-4 mt-4">
+          {exampleMessages.map((example, index) => (
+            <div
               key={index}
-              variant="link"
-              className="h-auto p-0 text-base"
-              onClick={async () => {
-                submitMessage(message.message);
-              }}
+              className="bg-appOrange w-[160px] text-black font-semibold px-4 py-4 rounded-lg text-center hover:opacity-90 transition-all cursor-pointer "
+              onClick={() => submitMessage(example.message)}
             >
-              <IconArrowRight className="mr-2 text-muted-foreground" />
-              {message.heading}
-            </Button>
+              <div>{example?.image}</div>
+              <div className="leading-5 mt-2">{example.heading}</div>
+            </div>
           ))}
-
-          <Link href="?stt=fon">
-            <Button variant="link" className="h-auto p-0 text-base">
-              <IconArrowRight className="mr-2 text-muted-foreground" />
-              Talk in Fon
-            </Button>
+          <Link
+            href="/?stt=fon"
+            className="bg-appOrange w-[160px]  text-black font-semibold px-4 py-4 rounded-lg text-center hover:opacity-90 transition-all cursor-pointer "
+          >
+            <div>🗣️</div>
+            <div className="leading-5 mt-2">Write and speak in Fon</div>
           </Link>
         </div>
-        <ModelStatus />
+
+        <span className="text-gray-500 text-sm text-center my-4">
+          Note: Translations are simulated for illustrative purposes. Please
+          verify accuracy with a native speaker.
+        </span>
+
+        <div className="text-center">
+          <h3 className="text-white text-xl font-semibold">Quick answers</h3>
+          <div className="flex gap-4 mt-4">
+            {quickAnswers.map((answer, index) => (
+              <div
+                onClick={() => setActive(answer.title)}
+                key={index}
+                className={`border cursor-pointer hover:opacity-90 transition-all border-white px-4 py-1 rounded-full font-semibold flex gap-3 items-center ${active === answer.title ? 'bg-white text-black' : 'bg-transparent text-white'}`}
+              >
+                <span>{answer.image}</span>
+                <span>{answer.title}</span>
+              </div>
+            ))}
+          </div>
+          {active && (
+            <div className="flex gap-8 mt-6">
+              {quickAnswers
+                .find(answer => answer.title === active)
+                ?.items.map((item, index) => (
+                  <div
+                    onClick={() =>
+                      submitMessage(`How do I say "${item}" in Fon?`)
+                    }
+                    key={index}
+                    className="bg-slate-50 hover:bg-slate-200 transition-all cursor-pointer text-black px-4 py-2 rounded-xl flex gap-2 items-center w-full h-16 font-semibold text-center justify-center"
+                  >
+                    <span>{item}</span>
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
       </div>
-      <p className="leading-normal text-muted-foreground text-[0.8rem] text-center max-w-96 ml-auto mr-auto">
-        Note: Translations are simulated for illustrative purposes. Please
-        verify accuracy with a native speaker.
-      </p>
     </div>
   );
 }

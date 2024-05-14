@@ -57,3 +57,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+.audio-recorder {
+  background-color: #ffc86a !important;
+  box-shadow: none !important;
+}
