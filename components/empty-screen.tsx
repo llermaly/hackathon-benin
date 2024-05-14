@@ -63,7 +63,7 @@ export function EmptyScreen({
           {exampleMessages.map((example, index) => (
             <div
               key={index}
-              className="bg-appOrange w-[160px] text-black font-semibold px-4 py-4 rounded-lg text-center hover:opacity-90 transition-all cursor-pointer "
+              className="bg-appOrange w-[160px] text-black font-semibold px-4 py-4 rounded-3xl text-center hover:opacity-90 transition-all cursor-pointer "
               onClick={() => submitMessage(example.message)}
             >
               <div>{example?.image}</div>
@@ -72,7 +72,7 @@ export function EmptyScreen({
           ))}
           <Link
             href="/?stt=fon"
-            className="bg-appOrange w-[160px]  text-black font-semibold px-4 py-4 rounded-lg text-center hover:opacity-90 transition-all cursor-pointer "
+            className="bg-appOrange w-[160px]  text-black font-semibold px-4 py-4 rounded-3xl text-center hover:opacity-90 transition-all cursor-pointer "
           >
             <div>🗣️</div>
             <div className="leading-5 mt-2">Write and speak in Fon</div>
@@ -99,7 +99,7 @@ export function EmptyScreen({
             ))}
           </div>
           {active && (
-            <div className="flex gap-8 mt-6">
+            <div className="flex gap-8 mt-8">
               {quickAnswers
                 .find(answer => answer.title === active)
                 ?.items.map((item, index) => (
@@ -108,9 +108,9 @@ export function EmptyScreen({
                       submitMessage(`How do I say "${item}" in Fon?`)
                     }
                     key={index}
-                    className="bg-slate-50 hover:bg-slate-200 transition-all cursor-pointer text-black px-4 py-2 rounded-xl flex gap-2 items-center w-full h-16 font-semibold text-center justify-center"
+                    className="bg-slate-50 hover:bg-slate-200 transition-all cursor-pointer text-black px-4 py-2 rounded-3xl flex gap-2 items-center w-full h-16 font-semibold text-center justify-center text-xl"
                   >
-                    <span>{item}</span>
+                    <span className="tracking-wide">{item}</span>
                   </div>
                 ))}
             </div>
