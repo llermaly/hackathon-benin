@@ -39,7 +39,7 @@ const exampleMessages = [
   {
     heading: 'Asking about Fon translations',
     message: 'What is the translation of "Wǎ nú xɔ́ntɔn ce!" in English?',
-    image: '🇧🇯',
+    image: '🇧🇯 -> 🇺🇸',
   },
   {
     heading: 'Places suggestions',
