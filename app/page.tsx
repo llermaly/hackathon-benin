@@ -7,7 +7,6 @@ import { BotCard, UserMessage } from '@/components/llm-stocks/message';
 
 import { type AI } from './action';
 import { ChatScrollAnchor } from '@/lib/hooks/chat-scroll-anchor';
-import { FooterText } from '@/components/footer';
 import Textarea from 'react-textarea-autosize';
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit';
 import {
@@ -15,7 +14,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { IconArrowElbow } from '@/components/ui/icons';
 import { Button } from '@/components/ui/button';
 import { ChatList } from '@/components/chat-list';
 import { EmptyScreen } from '@/components/empty-screen';
@@ -153,7 +151,7 @@ export default function Page() {
                 }
               }}
             >
-              <div className="relative flex flex-col w-full px-8 overflow-hidden max-h-60 grow  sm:rounded-md sm:border border-appOrange sm:px-12">
+              <div className="relative flex flex-col w-full px-8 overflow-hidden max-h-60 grow  sm:rounded-md border-2 border-appOrange sm:px-12">
                 <div className="absolute left-0  p-0 rounded-full top-3  sm:left-4">
                   <AudioRecorder
                     onRecordingComplete={async blob => {
@@ -206,7 +204,7 @@ export default function Page() {
                         }}
                         size="icon"
                       >
-                        <IoMdRefresh className="text-black" />
+                        <IoMdRefresh className="text-black text-xl" />
                         <span className="sr-only">Start again</span>
                       </Button>
                     </TooltipTrigger>

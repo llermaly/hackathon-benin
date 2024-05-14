@@ -70,6 +70,7 @@ const config: Config = {
         appBlue: '#181D2F',
         appOrange: '#FFC86A',
         appBlue2: '#1D2339',
+        appGreen: '#0A433C',
       },
     },
   },

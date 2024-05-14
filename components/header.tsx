@@ -22,7 +22,7 @@ export function Header({ showExtraMessage }: any) {
           {showExtraMessage && (
             <div className="bg-appBlue2 text-white rounded-lg p-4">
               This demo showcases an AI-powered assistant that is tailored to{' '}
-              <span className="text-appOrange">
+              <span className="text-appOrange font-semibold">
                 help tourists prepare for their journey to Benin,
               </span>{' '}
               immersing them in Fon culture and facilitating communication.
