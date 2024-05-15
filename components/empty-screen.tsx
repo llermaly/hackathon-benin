@@ -22,15 +22,6 @@ const quickAnswers = [
     ],
   },
   {
-    title: 'Transport',
-    image: '🚗',
-    items: [
-      { name: '🚕 Taxi', audio: '/audio/taxi.flac' },
-      { name: '🚌 Bus', audio: '/audio/bus.flac' },
-      { name: '🚂 Train', audio: '/audio/train.flac' },
-    ],
-  },
-  {
     title: 'Shopping',
     image: '🛍️',
     items: [
