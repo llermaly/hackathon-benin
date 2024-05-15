@@ -104,7 +104,7 @@ export function EmptyScreen({
           ))}
           <Link
             href="/?stt=fon"
-            className="bg-appOrange w-full  text-black font-semibold p-2 rounded-xl text-center hover:opacity-90 transition-all cursor-pointer "
+            className="bg-appOrange w-full  text-appGreen font-semibold p-2 rounded-xl text-center hover:opacity-90 transition-all cursor-pointer "
           >
             <div className="border-dotted h-full border-2 border-black border-opacity-30 rounded-xl p-2 flex flex-col justify-between">
               <div className="text-[44px]">🗣️</div>
