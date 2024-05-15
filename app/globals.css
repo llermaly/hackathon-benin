@@ -57,15 +57,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-audio {
-  width: 100%;
-  border: 2px solid white;
-  border-radius: 99px;
-}
-
-audio::-webkit-media-controls-panel {
-  background-color: white;
-  color: white;
-  border: 1px solid white;
-}
