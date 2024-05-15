@@ -7,45 +7,45 @@ const quickAnswers = [
     title: 'Food',
     image: '🍲',
     items: [
-      { name: '🍎 Apple', audio: '/audio/apple.mp3' },
-      { name: '💧 Water', audio: '/audio/water.mp3' },
-      { name: '🍞 Bread', audio: '/audio/bread.mp3' },
+      { name: '🍎 Apple', audio: '/audio/apple.flac' },
+      { name: '💧 Water', audio: '/audio/water.flac' },
+      { name: '🍞 Bread', audio: '/audio/bread.flac' },
     ],
   },
   {
     title: 'Hotel',
     image: '🏨',
     items: [
-      { name: '🛏️ Bed', audio: '/audio/bed.mp3' },
-      { name: '🚿 Shower', audio: '/audio/shower.mp3' },
-      { name: '🍳 Breakfast', audio: '/audio/breakfast.mp3' },
+      { name: '🛏️ Bed', audio: '/audio/bed.flac' },
+      { name: '🚿 Shower', audio: '/audio/shower.flac' },
+      { name: '🍳 Breakfast', audio: '/audio/breakfast.flac' },
     ],
   },
   {
     title: 'Transport',
     image: '🚗',
     items: [
-      { name: '🚕 Taxi', audio: '/audio/taxi.mp3' },
-      { name: '🚌 Bus', audio: '/audio/bus.mp3' },
-      { name: '🚂 Train', audio: '/audio/train.mp3' },
+      { name: '🚕 Taxi', audio: '/audio/taxi.flac' },
+      { name: '🚌 Bus', audio: '/audio/bus.flac' },
+      { name: '🚂 Train', audio: '/audio/train.flac' },
     ],
   },
   {
     title: 'Shopping',
     image: '🛍️',
     items: [
-      { name: '👗 Clothes', audio: '/audio/clothes.mp3' },
-      { name: '👟 Shoes', audio: '/audio/shoes.mp3' },
-      { name: '🕶️ Sunglasses', audio: '/audio/sunglasses.mp3' },
+      { name: '👗 Clothes', audio: '/audio/clothes.flac' },
+      { name: '👟 Shoes', audio: '/audio/shoes.flac' },
+      { name: '🕶️ Sunglasses', audio: '/audio/sunglasses.flac' },
     ],
   },
   {
     title: 'Emergency',
     image: '🚑',
     items: [
-      { name: '🚨 Help', audio: '/audio/help.mp3' },
-      { name: '🚑 Ambulance', audio: '/audio/ambulance.mp3' },
-      { name: '🚒 Fire', audio: '/audio/fire.mp3' },
+      { name: '🚨 Help', audio: '/audio/help.flac' },
+      { name: '🚑 Ambulance', audio: '/audio/ambulance.flac' },
+      { name: '🚒 Fire', audio: '/audio/fire.flac' },
     ],
   },
 ];
@@ -77,7 +77,7 @@ export function EmptyScreen({
   const [active, setActive] = useState('Food');
 
   const playAudio = (audio: string) => {
-    const audioEl = new Audio('/test.flac');
+    const audioEl = new Audio(audio);
     audioEl.play();
   };
 
