@@ -2,7 +2,9 @@ import ModelStatus from './model-status';
 
 export function Header({ showExtraMessage }: any) {
   return (
-    <header className="sticky top-0 z-50 w-full shrink-0 bg-appBlue">
+    <header
+      className={`z-50 w-full shrink-0 bg-appBlue ${showExtraMessage ? '' : 'sticky top-0'}`}
+    >
       <div
         className={`mx-auto py-8 px-4 ${showExtraMessage ? 'max-w-7xl' : 'max-w-[1000px]'}`}
       >
