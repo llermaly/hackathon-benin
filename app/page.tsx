@@ -65,7 +65,7 @@ export default function Page() {
   return (
     <div>
       <Header showExtraMessage={messages.length === 0 && !sttFon} />
-      <div className="pb-[200px] pt-4 md:pt-10">
+      <div className="pb-[200px] pt-4 ">
         {messages.length ? (
           <>
             <ChatList messages={messages} />
@@ -110,8 +110,8 @@ export default function Page() {
         )}
         <ChatScrollAnchor trackVisibility={true} />
       </div>
-      <div className="fixed inset-x-0 bottom-0 w-full  peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
-        <div className="mx-auto sm:max-w-4xl sm:px-4">
+      <div className="fixed bg-appBlue inset-x-0 bottom-0 w-full  peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
+        <div className="mx-auto sm:max-w-[1000px]">
           <div className="px-4 py-2 space-y-4  shadow-lg sm:rounded-t-xl  md:py-4">
             <form
               ref={formRef}
@@ -151,8 +151,8 @@ export default function Page() {
                 }
               }}
             >
-              <div className="relative flex flex-col w-full px-8 overflow-hidden max-h-60 grow  sm:rounded-md border-2 border-appOrange sm:px-12">
-                <div className="absolute left-0  p-0 rounded-full top-3  sm:left-4">
+              <div className="relative flex flex-col w-full px-12 overflow-hidden max-h-60 grow  rounded-md border-2 border-appOrange ">
+                <div className="absolute left-4  p-0 rounded-full top-3">
                   <AudioRecorder
                     onRecordingComplete={async blob => {
                       const url = URL.createObjectURL(blob);
@@ -191,7 +191,7 @@ export default function Page() {
                   onChange={e => setInputValue(e.target.value)}
                 />
 
-                <div className="absolute right-0 top-4 sm:right-4">
+                <div className="absolute top-4 right-4">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button

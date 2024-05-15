@@ -4,16 +4,17 @@ export function Header({ showExtraMessage }: any) {
   return (
     <header className="sticky top-0 z-50 w-full shrink-0 bg-appBlue">
       <div
-        className={`mx-auto py-8 px-4 ${showExtraMessage ? 'max-w-7xl' : 'max-w-3xl'}`}
+        className={`mx-auto py-8 px-4 ${showExtraMessage ? 'max-w-7xl' : 'max-w-[1000px]'}`}
       >
-        <div className="text-white flex gap-8">
+        <div className="text-white flex gap-8 flex-wrap lg:flex-nowrap">
           <div className="max-w-sm w-full">
             <h1 className="text-xl font-bold">🇧🇯 FongBot</h1>
 
             {showExtraMessage && (
               <>
                 <h2 className="text-2xl font-semibold max-w-sm mt-3">
-                  Welcome to the Interactive Tourism Guide for Benin!
+                  Welcome to the Interactive Tourism Guide for{' '}
+                  <span className="text-appOrange font-bold">Benin!</span>
                 </h2>
                 <ModelStatus />
               </>
