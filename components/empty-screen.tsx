@@ -7,13 +7,13 @@ const quickAnswers = [
     title: 'Food',
     image: '🍲',
     items: [
-      { name: '🍎 Apple', audio: '/audio/apple.flac' },
+      { name: '🍎 Fruit', audio: '/audio/apple.flac' },
       { name: '💧 Water', audio: '/audio/water.flac' },
       { name: '🍞 Bread', audio: '/audio/bread.flac' },
     ],
   },
   {
-    title: 'Hotel',
+    title: 'Home',
     image: '🏨',
     items: [
       { name: '🛏️ Bed', audio: '/audio/bed.flac' },
@@ -22,7 +22,7 @@ const quickAnswers = [
     ],
   },
   {
-    title: 'Shopping',
+    title: 'Market',
     image: '🛍️',
     items: [
       { name: '👗 Clothes', audio: '/audio/clothes.flac' },
@@ -35,7 +35,7 @@ const quickAnswers = [
     image: '🚑',
     items: [
       { name: '🚨 Help', audio: '/audio/help.flac' },
-      { name: '🚑 Ambulance', audio: '/audio/ambulance.flac' },
+      { name: '🚓 Police', audio: '/audio/ambulance.flac' },
       { name: '🚒 Fire', audio: '/audio/fire.flac' },
     ],
   },
