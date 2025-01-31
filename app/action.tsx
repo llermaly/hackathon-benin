@@ -144,7 +144,7 @@ async function submitFonMessage(content: string | FormData) {
   ]);
 
   const completion = runOpenAICompletion(openai, {
-    model: 'gpt-4-turbo',
+    model: 'gpt-4o-mini',
     stream: true,
     messages: [
       {
@@ -303,7 +303,7 @@ async function submitUserMessage(content: string | FormData) {
   ]);
 
   const completion = runOpenAICompletion(openai, {
-    model: 'gpt-4-turbo',
+    model: 'gpt-4o-mini',
     stream: true,
     messages: [
       {
@@ -494,7 +494,7 @@ If the user is asking for places recommendations in Benin or Fon culture call \`
       );
 
       const additionalInfoResponse = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         messages: [
           { role: 'system', content: 'You are a helpful assistant.' },
           {
