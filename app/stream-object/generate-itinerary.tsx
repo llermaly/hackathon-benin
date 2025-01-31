@@ -24,7 +24,7 @@ export async function submitItineraryRequest({
   const isGenerating = createStreamableValue(true);
 
   streamObject({
-    model: openai('gpt-4-turbo'),
+    model: openai('gpt-4o-mini'),
     maxTokens: 2500,
     schema: itinerarySchema,
     system:
